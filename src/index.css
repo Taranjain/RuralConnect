@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles for rural chatbot */
+@layer base {
+  body {
+    font-family: 'Public Sans', 'Mukta', system-ui, sans-serif;
+    background-color: #F9F9F9;
+    color: #333333;
+  }
+  
+  /* Ensure minimum text size for accessibility */
+  * {
+    font-size: 16px;
+  }
+}
+
+/* Custom component styles */
+@layer components {
+  .btn-primary {
+    @apply bg-forest text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-terra text-white px-4 py-2 rounded-lg hover:bg-terra-dark transition-colors duration-200;
+  }
+  
+  .message-bubble-user {
+    @apply bg-green-100 text-gray-800 p-3 rounded-bl-2xl rounded-tl-2xl rounded-tr-md max-w-xs ml-auto;
+  }
+  
+  .message-bubble-bot {
+    @apply bg-white text-gray-900 p-3 rounded-br-2xl rounded-tr-2xl rounded-tl-md max-w-xs shadow-soft;
+  }
+  
+  .quick-reply-btn {
+    @apply bg-terra-light text-white p-2 rounded-lg cursor-pointer hover:bg-terra transition-colors duration-200 text-sm;
+  }
+}
+
+/* Accessibility improvements */
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+} 
