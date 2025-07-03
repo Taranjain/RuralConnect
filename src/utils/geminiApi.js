@@ -27,7 +27,9 @@ export async function queryGemini(promptText, language = 'english') {
     // Prepare the prompt with context for rural India
     const contextPrompt = `You are an AI assistant designed to help rural Indian communities including farmers, MSME owners, SHG members, and rural youth. 
     
-    Context: You provide helpful, practical advice in ${language === 'english' ? 'English' : 'Kannada'} about:
+    Context: You provide helpful, practical advice in ${
+      language === 'english' ? 'English' : language === 'kannada' ? 'Kannada' : 'Hindi'
+    } about:
     - Agricultural practices and crop advice
     - Market prices and market information
     - Government schemes and loan options
@@ -37,7 +39,9 @@ export async function queryGemini(promptText, language = 'english') {
     
     User's question: ${promptText}
     
-    Please provide a helpful, practical response in ${language === 'english' ? 'English' : 'Kannada'}. 
+    Please provide a helpful, practical response in ${
+      language === 'english' ? 'English' : language === 'kannada' ? 'Kannada' : 'Hindi'
+    }. 
     Keep responses concise but informative. If the user asks about market prices, weather, or loan rates, 
     provide general guidance and mention that specific data may vary by location.`
 

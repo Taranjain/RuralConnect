@@ -7,7 +7,8 @@ const FooterNav = ({ activePage, setActivePage, language }) => {
       icon: 'fas fa-home',
       label: {
         english: 'Home',
-        kannada: 'ಮುಖಪುಟ'
+        kannada: 'ಮುಖಪುಟ',
+        hindi: 'होम'
       }
     },
     {
@@ -15,7 +16,8 @@ const FooterNav = ({ activePage, setActivePage, language }) => {
       icon: 'fas fa-history',
       label: {
         english: 'History',
-        kannada: 'ಇತಿಹಾಸ'
+        kannada: 'ಇತಿಹಾಸ',
+        hindi: 'इतिहास'
       }
     },
     {
@@ -23,7 +25,8 @@ const FooterNav = ({ activePage, setActivePage, language }) => {
       icon: 'fas fa-book',
       label: {
         english: 'Resources',
-        kannada: 'ಸಂಪನ್ಮೂಲಗಳು'
+        kannada: 'ಸಂಪನ್ಮೂಲಗಳು',
+        hindi: 'संसाधन'
       }
     },
     {
@@ -31,7 +34,8 @@ const FooterNav = ({ activePage, setActivePage, language }) => {
       icon: 'fas fa-user',
       label: {
         english: 'Profile',
-        kannada: 'ಪ್ರೊಫೈಲ್'
+        kannada: 'ಪ್ರೊಫೈಲ್',
+        hindi: 'प्रोफ़ाइल'
       }
     }
   ]

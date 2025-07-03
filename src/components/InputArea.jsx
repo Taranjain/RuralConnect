@@ -14,7 +14,7 @@ const InputArea = ({ onSendMessage, isLoading, language }) => {
       
       recognitionInstance.continuous = false
       recognitionInstance.interimResults = false
-      recognitionInstance.lang = language === 'english' ? 'en-IN' : 'kn-IN'
+      recognitionInstance.lang = language === 'english' ? 'en-IN' : language === 'kannada' ? 'kn-IN' : 'hi-IN'
       
       recognitionInstance.onstart = () => {
         setIsListening(true)
@@ -34,7 +34,9 @@ const InputArea = ({ onSendMessage, isLoading, language }) => {
         if (event.error === 'not-allowed') {
           alert(language === 'english' 
             ? 'Please allow microphone access to use voice input' 
-            : 'ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಬಳಸಲು ದಯವಿಟ್ಟು ಮೈಕ್ರೋಫೋನ್ ಪ್ರವೇಶವನ್ನು ಅನುಮತಿಸಿ'
+            : language === 'kannada'
+              ? 'ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಬಳಸಲು ದಯವಿಟ್ಟು ಮೈಕ್ರೋಫೋನ್ ಪ್ರವೇಶವನ್ನು ಅನುಮತಿಸಿ'
+              : 'कृपया वॉइस इनपुट का उपयोग करने के लिए माइक्रोफोन एक्सेस की अनुमति दें'
           )
         }
       }
@@ -84,17 +86,21 @@ const InputArea = ({ onSendMessage, isLoading, language }) => {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder={
-                language === 'english' 
-                  ? 'Type your message...' 
-                  : 'ನಿಮ್ಮ ಸಂದೇಶವನ್ನು ಟೈಪ್ ಮಾಡಿ...'
+            placeholder={
+              language === 'english' 
+                ? 'Type your message...' 
+                : language === 'kannada'
+                  ? 'ನಿಮ್ಮ ಸಂದೇಶವನ್ನು ಟೈಪ್ ಮಾಡಿ...'
+                  : 'अपना संदेश टाइप करें...'
               }
               disabled={isLoading}
               className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-forest focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
               aria-label={
                 language === 'english' 
                   ? 'Type your message' 
-                  : 'ನಿಮ್ಮ ಸಂದೇಶವನ್ನು ಟೈಪ್ ಮಾಡಿ'
+                  : language === 'kannada'
+                    ? 'ನಿಮ್ಮ ಸಂದೇಶವನ್ನು ಟೈಪ್ ಮಾಡಿ'
+                    : 'अपना संदेश टाइप करें'
               }
             />
             
@@ -103,7 +109,11 @@ const InputArea = ({ onSendMessage, isLoading, language }) => {
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                 <span className="text-xs text-red-500">
-                  {language === 'english' ? 'Listening...' : 'ಕೇಳುತ್ತಿದ್ದೇನೆ...'}
+                  {language === 'english' 
+                    ? 'Listening...' 
+                    : language === 'kannada' 
+                      ? 'ಕೇಳುತ್ತಿದ್ದೇನೆ...' 
+                      : 'सुन रहा हूँ...'}
                 </span>
               </div>
             )}
@@ -122,12 +132,22 @@ const InputArea = ({ onSendMessage, isLoading, language }) => {
             aria-label={
               language === 'english' 
                 ? 'Use voice input' 
-                : 'ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಬಳಸಿ'
+                : language === 'kannada'
+                  ? 'ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಬಳಸಿ'
+                  : 'वॉइस इनपुट का उपयोग करें'
             }
             title={
               !recognition 
-                ? (language === 'english' ? 'Voice input not supported' : 'ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಬೆಂಬಲಿಸಲಾಗಿಲ್ಲ')
-                : (language === 'english' ? 'Click to speak' : 'ಮಾತನಾಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ')
+                ? (language === 'english' 
+                    ? 'Voice input not supported' 
+                    : language === 'kannada' 
+                      ? 'ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಬೆಂಬಲಿಸಲಾಗಿಲ್ಲ' 
+                      : 'वॉइस इनपुट समर्थित नहीं है')
+                : (language === 'english' 
+                    ? 'Click to speak' 
+                    : language === 'kannada' 
+                      ? 'ಮಾತನಾಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ' 
+                      : 'बोलने के लिए क्लिक करें')
             }
           >
             <i className={`fas ${isListening ? 'fa-stop' : 'fa-microphone'} text-lg`}></i>
@@ -141,7 +161,9 @@ const InputArea = ({ onSendMessage, isLoading, language }) => {
             aria-label={
               language === 'english' 
                 ? 'Send message' 
-                : 'ಸಂದೇಶ ಕಳುಹಿಸಿ'
+                : language === 'kannada'
+                  ? 'ಸಂದೇಶ ಕಳುಹಿಸಿ'
+                  : 'संदेश भेजें'
             }
           >
             <i className="fas fa-paper-plane text-lg"></i>
@@ -154,7 +176,9 @@ const InputArea = ({ onSendMessage, isLoading, language }) => {
             <i className="fas fa-info-circle mr-1"></i>
             {language === 'english' 
               ? 'Voice input is not supported in this browser' 
-              : 'ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಬೆಂಬಲಿಸಲಾಗಿಲ್ಲ'
+              : language === 'kannada'
+                ? 'ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಬೆಂಬಲಿಸಲಾಗಿಲ್ಲ'
+                : 'यह ब्राउज़र वॉइस इनपुट का समर्थन नहीं करता है'
             }
           </div>
         )}
@@ -163,4 +187,4 @@ const InputArea = ({ onSendMessage, isLoading, language }) => {
   )
 }
 
-export default InputArea 
+export default InputArea

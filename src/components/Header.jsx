@@ -27,7 +27,7 @@ const Header = ({ language, setLanguage }) => {
             <i className="fas fa-leaf text-forest text-lg"></i>
           </div>
           <h1 className="text-xl font-semibold">
-            {language === 'english' ? 'Rural Connect' : 'ಗ್ರಾಮೀಣ ಸಹಾಯಕ'}
+            {language === 'english' ? 'Rural Connect' : 'Rural Connect'}
           </h1>
         </a>
       </div>
@@ -45,8 +45,8 @@ const Header = ({ language, setLanguage }) => {
           ></div>
           <span className="text-sm hidden sm:inline">
             {isOnline 
-              ? (language === 'english' ? 'Online' : 'ಆನ್‌ಲೈನ್')
-              : (language === 'english' ? 'Offline' : 'ಆಫ್‌ಲೈನ್')
+              ? (language === 'english' ? 'Online' : 'Online')
+              : (language === 'english' ? 'Offline' : 'Offline')
             }
           </span>
         </div>
@@ -76,6 +76,18 @@ const Header = ({ language, setLanguage }) => {
             aria-pressed={language === 'kannada'}
           >
             ಕನ್ನಡ
+          </button>
+          <button
+            onClick={() => setLanguage('hindi')}
+            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200 ${
+              language === 'hindi'
+                ? 'bg-white text-forest'
+                : 'text-white hover:bg-white hover:bg-opacity-20'
+            }`}
+            aria-label="Switch to Hindi"
+            aria-pressed={language === 'hindi'}
+          >
+            हिंदी
           </button>
         </div>
       </div>

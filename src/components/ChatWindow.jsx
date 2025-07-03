@@ -6,14 +6,7 @@ const ChatWindow = ({ messages, isLoading, onQuickReply, language, extraBottomPa
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
-
-  const formatTimestamp = (timestamp) => {
-    return new Date(timestamp).toLocaleTimeString([], { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    })
-  }
+  }, [messages]);
 
   return (
     <div className={`flex-1 overflow-y-auto bg-off-white p-4 ${extraBottomPadding ? 'pb-32' : ''}`}>
@@ -24,9 +17,7 @@ const ChatWindow = ({ messages, isLoading, onQuickReply, language, extraBottomPa
             <div className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`${message.sender === 'user' ? 'message-bubble-user' : 'message-bubble-bot'}`}>
                 <p className="text-sm leading-relaxed">{message.text}</p>
-                <span className="text-xs text-gray-500 mt-1 block">
-                  {formatTimestamp(message.timestamp)}
-                </span>
+                
               </div>
             </div>
 
@@ -59,7 +50,11 @@ const ChatWindow = ({ messages, isLoading, onQuickReply, language, extraBottomPa
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
                 <span className="text-sm text-gray-600">
-                  {language === 'english' ? 'Thinking...' : 'ಯೋಚಿಸುತ್ತಿದ್ದೇನೆ...'}
+                  {language === 'english' 
+                    ? 'Thinking...' 
+                    : language === 'kannada' 
+                      ? 'ಯೋಚಿಸುತ್ತಿದ್ದೇನೆ...' 
+                      : 'सोच रहा हूँ...'}
                 </span>
               </div>
             </div>
@@ -73,7 +68,9 @@ const ChatWindow = ({ messages, isLoading, onQuickReply, language, extraBottomPa
             <p>
               {language === 'english' 
                 ? 'Start a conversation by typing a message or using the quick actions above'
-                : 'ಸಂದೇಶವನ್ನು ಟೈಪ್ ಮಾಡುವ ಮೂಲಕ ಅಥವಾ ಮೇಲಿನ ತ್ವರಿತ ಕ್ರಿಯೆಗಳನ್ನು ಬಳಸುವ ಮೂಲಕ ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ'
+                : language === 'kannada'
+                  ? 'ಸಂದೇಶವನ್ನು ಟೈಪ್ ಮಾಡುವ ಮೂಲಕ ಅಥವಾ ಮೇಲಿನ ತ್ವರಿತ ಕ್ರಿಯೆಗಳನ್ನು ಬಳಸುವ ಮೂಲಕ ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ'
+                  : 'ऊपर दिए गए त्वरित क्रियाओं का उपयोग करके या संदेश टाइप करके बातचीत शुरू करें'
               }
             </p>
           </div>

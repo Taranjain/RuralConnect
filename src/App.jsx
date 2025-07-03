@@ -4,11 +4,63 @@ import WelcomeCard from './components/WelcomeCard'
 import ChatWindow from './components/ChatWindow'
 import InputArea from './components/InputArea'
 import { queryGemini } from './utils/geminiApi'
+import { getKannadaSpeechAudio } from './utils/googleTTS'
 
 function App() {
-  const [language, setLanguage] = useState('english') // 'english' or 'kannada'
+  const [language, setLanguage] = useState('english') // 'english', 'kannada' or 'hindi'
   const [messages, setMessages] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+
+  // Text-to-Speech function using Web Speech API or Google Cloud TTS for Kannada
+  const speakText = async (text, lang) => {
+    if (lang === 'kannada') {
+      try {
+        const audioContent = await getKannadaSpeechAudio(text)
+        const audio = new Audio('data:audio/mp3;base64,' + audioContent)
+        audio.play()
+      } catch (error) {
+        console.error('Error playing Kannada speech audio:', error)
+      }
+    } else if (lang === 'hindi') {
+      if (!window.speechSynthesis) {
+        console.warn('Speech synthesis not supported in this browser.')
+        return
+      }
+
+      const speak = () => {
+        const utterance = new SpeechSynthesisUtterance(text)
+        utterance.lang = 'hi-IN'
+        window.speechSynthesis.speak(utterance)
+      }
+
+      if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.addEventListener('voiceschanged', () => {
+          speak()
+        })
+      } else {
+        speak()
+      }
+    } else {
+      if (!window.speechSynthesis) {
+        console.warn('Speech synthesis not supported in this browser.')
+        return
+      }
+
+      const speak = () => {
+        const utterance = new SpeechSynthesisUtterance(text)
+        utterance.lang = 'en-IN'
+        window.speechSynthesis.speak(utterance)
+      }
+
+      if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.addEventListener('voiceschanged', () => {
+          speak()
+        })
+      } else {
+        speak()
+      }
+    }
+  }
 
   // Handle sending messages to Gemini API
   const sendMessage = async (text) => {
@@ -16,10 +68,8 @@ function App() {
 
     // Add user message to chat
     const userMessage = {
-      id: Date.now(),
       text,
-      sender: 'user',
-      timestamp: new Date().toLocaleTimeString()
+      sender: 'user'
     }
     
     setMessages(prev => [...prev, userMessage])
@@ -31,14 +81,15 @@ function App() {
       
       // Add bot response to chat
       const botMessage = {
-        id: Date.now() + 1,
         text: response,
         sender: 'bot',
-        timestamp: new Date().toLocaleTimeString(),
         quickReplies: generateQuickReplies(text, language)
       }
       
       setMessages(prev => [...prev, botMessage])
+
+      // Speak the bot response text
+      speakText(response, language)
     } catch (error) {
       console.error('Error querying Gemini:', error)
       
@@ -47,7 +98,9 @@ function App() {
         id: Date.now() + 1,
         text: language === 'english' 
           ? 'Sorry, I encountered an error. Please try again.' 
-          : 'ಕ್ಷಮಿಸಿ, ನಾನು ದೋಷವನ್ನು ಎದುರಿಸಿದ್ದೇನೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+          : language === 'kannada'
+            ? 'ಕ್ಷಮಿಸಿ, ನಾನು ದೋಷವನ್ನು ಎದುರಿಸಿದ್ದೇನೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.'
+            : 'क्षमा करें, मुझे एक त्रुटि का सामना करना पड़ा। कृपया पुनः प्रयास करें।',
         sender: 'bot',
         timestamp: new Date().toLocaleTimeString()
       }
@@ -65,25 +118,33 @@ function App() {
     if (text.includes('market') || text.includes('price')) {
       return lang === 'english' 
         ? ['Show me rice prices', 'What about vegetables?', 'Tell me about pulses']
-        : ['ಅಕ್ಕಿ ಬೆಲೆಗಳನ್ನು ತೋರಿಸಿ', 'ತರಕಾರಿಗಳ ಬಗ್ಗೆ ಏನು?', 'ಬೇಳೆಕಾಳುಗಳ ಬಗ್ಗೆ ಹೇಳಿ']
+        : lang === 'kannada'
+          ? ['ಅಕ್ಕಿ ಬೆಲೆಗಳನ್ನು ತೋರಿಸಿ', 'ತರಕಾರಿಗಳ ಬಗ್ಗೆ ಏನು?', 'ಬೇಳೆಕಾಳುಗಳ ಬಗ್ಗೆ ಹೇಳಿ']
+          : ['चावल की कीमतें दिखाएं', 'सब्जियों के बारे में क्या?', 'दालों के बारे में बताएं']
     }
     
     if (text.includes('weather') || text.includes('rain')) {
       return lang === 'english'
         ? ['Today\'s forecast', 'Weekly weather', 'Best time to plant']
-        : ['ಇಂದಿನ ಮುನ್ಸೂಚನೆ', 'ವಾರದ ಹವಾಮಾನ', 'ನೆಡುವ ಉತ್ತಮ ಸಮಯ']
+        : lang === 'kannada'
+          ? ['ಇಂದಿನ ಮುನ್ಸೂಚನೆ', 'ವಾರದ ಹವಾಮಾನ', 'ನೆಡುವ ಉತ್ತಮ ಸಮಯ']
+          : ['आज का पूर्वानुमान', 'साप्ताहिक मौसम', 'पौधारोपण का सर्वोत्तम समय']
     }
     
     if (text.includes('loan') || text.includes('credit')) {
       return lang === 'english'
         ? ['SHG loan rates', 'Kisan Credit Card', 'How to apply']
-        : ['ಸ್ವಯಂ ಸಹಾಯ ಸಂಘ ಸಾಲ ದರಗಳು', 'ಕಿಸಾನ್ ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್', 'ಹೇಗೆ ಅರ್ಜಿ ಸಲ್ಲಿಸುವುದು']
+        : lang === 'kannada'
+          ? ['ಸ್ವಯಂ ಸಹಾಯ ಸಂಘ ಸಾಲ ದರಗಳು', 'ಕಿಸಾನ್ ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್', 'ಹೇಗೆ ಅರ್ಜಿ ಸಲ್ಲಿಸುವುದು']
+          : ['एसएचजी ऋण दरें', 'किसान क्रेडिट कार्ड', 'कैसे आवेदन करें']
     }
     
     // Default quick replies
     return lang === 'english'
       ? ['Crop advice', 'Market prices', 'Weather forecast']
-      : ['ಬೆಳೆ ಸಲಹೆ', 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳು', 'ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ']
+      : lang === 'kannada'
+        ? ['ಬೆಳೆ ಸಲಹೆ', 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳು', 'ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ']
+        : ['फसल सलाह', 'बाजार की कीमतें', 'मौसम का पूर्वानुमान']
   }
 
   return (
