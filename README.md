@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Rural India Chatbot Interface
 
 A beautiful, intuitive desktop web chatbot interface designed specifically for rural India communities including farmers, MSME owners, SHG members, and rural youth. Built with React, Tailwind CSS, and integrated with Google's Gemini API.
@@ -240,3 +241,6 @@ This project is open source and available under the MIT License.
 ---
 
 **Built with ❤️ for Rural India** 
+=======
+# RuralConnect
+>>>>>>> da5d03eea0859b5d25ea41567a9507d3a9136e1f
